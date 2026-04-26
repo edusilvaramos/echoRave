@@ -1,5 +1,5 @@
 
-
+// Design tokens for consistent colors across screens, controls, and audio states.
 const colors = {
   // Backgrounds
   background: '#0B1120',

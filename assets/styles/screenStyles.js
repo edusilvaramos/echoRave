@@ -1,5 +1,6 @@
 import { StyleSheet } from "react-native";
 
+// shared screen styles 
 export const homeScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -25,6 +26,7 @@ export const homeScreenStyles = StyleSheet.create({
   },
 });
 
+// warm palette helps differentiate the recording workflow from the other tabs
 export const recordScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -50,6 +52,7 @@ export const recordScreenStyles = StyleSheet.create({
   },
 });
 
+// cool palette highlights the remix/processing area as a distinct step
 export const raveScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
