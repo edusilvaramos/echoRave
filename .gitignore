@@ -40,3 +40,6 @@ yarn-error.*
 # generated native folders
 /ios
 /android
+
+# consignes prof projeto
+.Projet_Final_React_Native.pdf
