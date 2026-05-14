@@ -89,6 +89,7 @@ export const homeScreenStyles = StyleSheet.create({
   },
   modelItem: {
     paddingVertical: 0,
+    margin: 4,
   },
   modelText: {
     fontSize: 14,
