@@ -12,7 +12,10 @@ import {
   stopAndUnloadSound,
   stopRecording,
 } from "../services/audioService";
-import { copyRecordingToPersistentStorage } from "../services/fileService";
+import {
+  copyRecordingToPersistentStorage,
+  deleteFileIfExists,
+} from "../services/fileService";
 import { addRecording } from "../store/recordingsSlice";
 
 export default function RecordScreen() {
@@ -159,6 +162,22 @@ export default function RecordScreen() {
     Alert.alert("Saved", `"${trimmedName}" was saved successfully.`);
   }
 
+  // discard the current take so the user can record again
+  async function handleDiscardRecording() {
+    await stopAndUnloadSound(soundRef.current);
+    soundRef.current = null;
+    setIsPlayingPreview(false);
+
+    if (tempUri) {
+      // temp file may already be gone, so delete is best-effort only
+      await deleteFileIfExists(tempUri);
+    }
+
+    setTempUri(null);
+    setClipName("");
+    setDuration(0);
+  }
+
   // whether the user has a recording ready to name and save
   const hasRecording = !!tempUri && !isRecording;
 
@@ -241,6 +260,15 @@ export default function RecordScreen() {
               onPress={handleSave}
             >
               Save Recording
+            </Button>
+
+            <Button
+              mode="text"
+              icon="restart"
+              style={styles.button}
+              onPress={handleDiscardRecording}
+            >
+              Discard and Record Again
             </Button>
           </>
         )}
