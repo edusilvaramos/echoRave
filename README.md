@@ -1,4 +1,3 @@
-
 # EchoRave
 
 Mobile app built with React Native and Expo to connect to a Flask/RAVE server, record audio, and run timbre transfer.
@@ -13,6 +12,10 @@ Mobile app built with React Native and Expo to connect to a Flask/RAVE server, r
 - expo-av
 - expo-file-system
 - expo-document-picker
+
+## Permissions
+
+The app asks for microphone permission when the user starts recording.
 
 ## Server API
 
@@ -40,3 +43,5 @@ The Flask server must be running and reachable on the same network. Enter the se
 - https://callstack.github.io/react-native-paper/
 - https://docs.expo.dev/versions/latest/sdk/filesystem/
 - https://docs.expo.dev/versions/latest/sdk/document-picker/
+- https://docs.expo.dev/versions/latest/sdk/audio/
+- https://docs.expo.dev/versions/latest/sdk/filesystem/
