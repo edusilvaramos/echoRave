@@ -96,10 +96,22 @@ export default function RecordScreen() {
     try {
       setIsPlayingPreview(true);
       const sound = await playSound(tempUri);
+
+      if (!sound) {
+        setIsPlayingPreview(false);
+        Alert.alert("Error", "Could not load the preview audio.");
+        return;
+      }
+
       soundRef.current = sound;
 
       // unload automatically when playback finishes
       sound.setOnPlaybackStatusUpdate((status) => {
+        if (!status.isLoaded) {
+          setIsPlayingPreview(false);
+          return;
+        }
+
         if (status.didJustFinish) {
           stopAndUnloadSound(sound);
           soundRef.current = null;

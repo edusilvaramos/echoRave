@@ -33,6 +33,23 @@ export async function configureAudioModeForRecording() {
   }
 }
 
+// switch back to playback mode so preview audio can be heard reliably
+export async function configureAudioModeForPlayback() {
+  try {
+    await Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      playsInSilentModeIOS: true,
+      staysActiveInBackground: false,
+      shouldDuckAndroid: true,
+      playThroughEarpieceAndroid: false,
+    });
+    return true;
+  } catch (error) {
+    console.warn("configureAudioModeForPlayback failed:", error);
+    return false;
+  }
+}
+
 // create and start a new recording session
 export async function startRecording() {
   const recording = new Audio.Recording();
@@ -89,6 +106,8 @@ export async function createSound(uri) {
 
 // create a sound and start playback right away
 export async function playSound(uri) {
+  await configureAudioModeForPlayback();
+
   const sound = await createSound(uri);
 
   if (!sound) {
