@@ -8,10 +8,10 @@ Mobile app built with React Native and Expo to connect to a Flask/RAVE server, r
 - React Native
 - React Navigation (Material Top Tabs)
 - Redux Toolkit + redux-persist
-- React Native Paper
-- expo-av
-- expo-file-system
-- expo-document-picker
+- React Native Paper[https://callstack.github.io/react-native-paper/]
+- expo-av[https://docs.expo.dev/versions/latest/sdk/audio/]
+- expo-file-system[https://docs.expo.dev/versions/latest/sdk/filesystem/]
+- expo-document-picker[https://docs.expo.dev/versions/latest/sdk/document-picker/]
 
 ## Permissions
 
@@ -41,7 +41,5 @@ The Flask server must be running and reachable on the same network. Enter the se
 - https://reactnavigation.org/docs/material-top-tab-navigator/
 - https://redux-toolkit.js.org/
 - https://callstack.github.io/react-native-paper/
-- https://docs.expo.dev/versions/latest/sdk/filesystem/
 - https://docs.expo.dev/versions/latest/sdk/document-picker/
 - https://docs.expo.dev/versions/latest/sdk/audio/
-- https://docs.expo.dev/versions/latest/sdk/filesystem/

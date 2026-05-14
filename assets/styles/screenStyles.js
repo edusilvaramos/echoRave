@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-// shared screen styles 
+// shared screen styles
 export const homeScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -113,25 +113,75 @@ export const homeScreenStyles = StyleSheet.create({
 export const recordScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     padding: 24,
     backgroundColor: "#fff7ed",
-    gap: 8,
+  },
+  scroll: {
+    flexGrow: 1,
+    gap: 16,
+    paddingBottom: 40,
   },
   title: {
+    marginTop: 40,
     fontSize: 28,
     fontWeight: "700",
     color: "#7c2d12",
+    marginBottom: 4,
   },
   subtitle: {
     fontSize: 16,
     color: "#9a3412",
+    marginBottom: 8,
+  },
+  // badge shown while microphone is active
+  recordingBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    alignSelf: "flex-start",
+    backgroundColor: "#fee2e2",
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    gap: 6,
+    marginBottom: 8,
+  },
+  recordingDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: "#ef4444",
+  },
+  recordingLabel: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#991b1b",
+  },
+  button: {
+    borderRadius: 10,
+    marginTop: 8,
+  },
+  buttonContent: {
+    minHeight: 50,
+  },
+  buttonLabel: {
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  input: {
+    backgroundColor: "#ffffff",
+    marginTop: 8,
+  },
+  sectionTitle: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#7c2d12",
+    marginTop: 16,
   },
   hint: {
     fontSize: 14,
     color: "#b45309",
     textAlign: "center",
+    marginTop: 8,
   },
 });
 
