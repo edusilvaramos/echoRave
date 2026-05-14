@@ -183,6 +183,55 @@ export const recordScreenStyles = StyleSheet.create({
     textAlign: "center",
     marginTop: 8,
   },
+  emptyRecordingsText: {
+    marginTop: 8,
+    color: "#9a3412",
+    fontSize: 14,
+  },
+  recordingCard: {
+    marginTop: 10,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "#fdba74",
+    backgroundColor: "#ffffff",
+    padding: 12,
+    gap: 8,
+  },
+  recordingCardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: 8,
+  },
+  recordingTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    flex: 1,
+  },
+  recordingName: {
+    flex: 1,
+    fontSize: 15,
+    fontWeight: "700",
+    color: "#7c2d12",
+  },
+  recordingDuration: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: "#9a3412",
+  },
+  recordingDate: {
+    fontSize: 12,
+    color: "#b45309",
+  },
+  recordingActions: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    gap: 8,
+  },
+  actionButton: {
+    borderRadius: 8,
+  },
 });
 
 // cool palette highlights the remix/processing area as a distinct step

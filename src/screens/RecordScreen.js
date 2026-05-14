@@ -1,7 +1,8 @@
-import { useRef, useState } from "react";
-import { Alert, ScrollView, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useEffect, useRef, useState } from "react";
+import { Alert, FlatList, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { recordScreenStyles as styles } from "../../assets/styles/screenStyles";
 import {
@@ -16,10 +17,36 @@ import {
   copyRecordingToPersistentStorage,
   deleteFileIfExists,
 } from "../services/fileService";
-import { addRecording } from "../store/recordingsSlice";
+import { addRecording, removeRecording } from "../store/recordingsSlice";
+
+function formatDuration(durationMillis) {
+  if (!durationMillis || durationMillis <= 0) {
+    return "0:00";
+  }
+
+  const totalSeconds = Math.floor(durationMillis / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+function formatCreatedAt(createdAt) {
+  if (!createdAt) {
+    return "Unknown date";
+  }
+
+  const date = new Date(createdAt);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Unknown date";
+  }
+
+  return date.toLocaleString();
+}
 
 export default function RecordScreen() {
   const dispatch = useDispatch();
+  const recordings = useSelector((state) => state.recordings.items || []);
 
   // the active Audio.Recording object while the mic is on
   const recordingRef = useRef(null);
@@ -39,8 +66,16 @@ export default function RecordScreen() {
   const [clipName, setClipName] = useState("");
 
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
+  const [playingRecordingId, setPlayingRecordingId] = useState(null);
 
-  // here the  recording flow 
+  // cleanup currently loaded sounds when leaving this screen
+  useEffect(() => {
+    return () => {
+      stopAndUnloadSound(soundRef.current);
+    };
+  }, []);
+
+  // here the  recording flow
 
   async function handleStartRecording() {
     // ask permission first; stop if the user denies
@@ -84,7 +119,7 @@ export default function RecordScreen() {
     setDuration(result.duration);
   }
 
-  // preview flow 
+  // preview flow
 
   async function handlePlayPreview() {
     if (!tempUri) return;
@@ -123,6 +158,82 @@ export default function RecordScreen() {
       setIsPlayingPreview(false);
       Alert.alert("Error", "Could not play the preview.");
     }
+  }
+
+  async function handleTogglePlayback(recording) {
+    if (!recording?.uri) {
+      Alert.alert("Error", "This recording file is missing.");
+      return;
+    }
+
+    // stop current playback when tapping the same row again
+    if (playingRecordingId === recording.id) {
+      await stopAndUnloadSound(soundRef.current);
+      soundRef.current = null;
+      setPlayingRecordingId(null);
+      return;
+    }
+
+    // if another audio is playing, stop before starting the selected one
+    await stopAndUnloadSound(soundRef.current);
+    soundRef.current = null;
+
+    try {
+      const sound = await playSound(recording.uri);
+
+      if (!sound) {
+        Alert.alert("Error", "Could not load this recording.");
+        return;
+      }
+
+      soundRef.current = sound;
+      setPlayingRecordingId(recording.id);
+
+      sound.setOnPlaybackStatusUpdate((status) => {
+        if (!status.isLoaded) {
+          setPlayingRecordingId(null);
+          return;
+        }
+
+        if (status.didJustFinish) {
+          stopAndUnloadSound(sound);
+          soundRef.current = null;
+          setPlayingRecordingId(null);
+        }
+      });
+    } catch (error) {
+      console.warn("handleTogglePlayback failed:", error);
+      setPlayingRecordingId(null);
+      Alert.alert("Error", "Could not play this recording.");
+    }
+  }
+
+  function handleDeleteRecording(recording) {
+    Alert.alert(
+      "Delete recording",
+      `Do you want to delete "${recording.name}"?`,
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            if (playingRecordingId === recording.id) {
+              await stopAndUnloadSound(soundRef.current);
+              soundRef.current = null;
+              setPlayingRecordingId(null);
+            }
+
+            // deleting the file is best-effort, then we remove from Redux anyway
+            await deleteFileIfExists(recording.uri);
+            dispatch(removeRecording(recording.id));
+          },
+        },
+      ],
+    );
   }
 
   //  save
@@ -193,9 +304,52 @@ export default function RecordScreen() {
   // whether the user has a recording ready to name and save
   const hasRecording = !!tempUri && !isRecording;
 
-  return (
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scroll}>
+  function renderRecordingItem({ item }) {
+    const isPlaying = playingRecordingId === item.id;
+
+    return (
+      <View style={styles.recordingCard}>
+        <View style={styles.recordingCardHeader}>
+          <View style={styles.recordingTitleRow}>
+            <Ionicons name="musical-notes-outline" size={16} color="#9a3412" />
+            <Text style={styles.recordingName}>{item.name || "Untitled"}</Text>
+          </View>
+          <Text style={styles.recordingDuration}>
+            {formatDuration(item.duration)}
+          </Text>
+        </View>
+
+        <Text style={styles.recordingDate}>
+          {formatCreatedAt(item.createdAt)}
+        </Text>
+
+        <View style={styles.recordingActions}>
+          <Button
+            mode="outlined"
+            icon={isPlaying ? "stop" : "play"}
+            style={styles.actionButton}
+            onPress={() => handleTogglePlayback(item)}
+          >
+            {isPlaying ? "Stop" : "Play"}
+          </Button>
+
+          <Button
+            mode="text"
+            textColor="#b91c1c"
+            icon="delete"
+            style={styles.actionButton}
+            onPress={() => handleDeleteRecording(item)}
+          >
+            Delete
+          </Button>
+        </View>
+      </View>
+    );
+  }
+
+  function renderHeader() {
+    return (
+      <>
         <Text style={styles.title}>Record Audio</Text>
         <Text style={styles.subtitle}>
           Record a clip, preview it, then save it.
@@ -284,7 +438,24 @@ export default function RecordScreen() {
             </Button>
           </>
         )}
-      </ScrollView>
+
+        <Text style={styles.sectionTitle}>Saved Recordings</Text>
+      </>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <FlatList
+        data={recordings}
+        keyExtractor={(item) => item.id}
+        renderItem={renderRecordingItem}
+        ListHeaderComponent={renderHeader}
+        ListEmptyComponent={
+          <Text style={styles.emptyRecordingsText}>No recordings yet</Text>
+        }
+        contentContainerStyle={styles.scroll}
+      />
     </View>
   );
 }
