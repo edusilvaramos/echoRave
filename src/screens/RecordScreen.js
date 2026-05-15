@@ -1,10 +1,10 @@
-import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useRef, useState } from "react";
 import { Alert, FlatList, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 
 import { recordScreenStyles as styles } from "../../assets/styles/screenStyles";
+import RecordingListItem from "../components/record/RecordingListItem";
 import {
   configureAudioModeForRecording,
   playSound,
@@ -18,7 +18,6 @@ import {
   deleteFileIfExists,
 } from "../services/fileService";
 import { addRecording, removeRecording } from "../store/recordingsSlice";
-import { formatCreatedAt, formatDuration } from "../utils/audioFormatters";
 
 export default function RecordScreen() {
   const dispatch = useDispatch();
@@ -284,42 +283,13 @@ export default function RecordScreen() {
     const isPlaying = playingRecordingId === item.id;
 
     return (
-      <View style={styles.recordingCard}>
-        <View style={styles.recordingCardHeader}>
-          <View style={styles.recordingTitleRow}>
-            <Ionicons name="musical-notes-outline" size={16} color="#9a3412" />
-            <Text style={styles.recordingName}>{item.name || "Untitled"}</Text>
-          </View>
-          <Text style={styles.recordingDuration}>
-            {formatDuration(item.duration)}
-          </Text>
-        </View>
-
-        <Text style={styles.recordingDate}>
-          {formatCreatedAt(item.createdAt)}
-        </Text>
-
-        <View style={styles.recordingActions}>
-          <Button
-            mode="outlined"
-            icon={isPlaying ? "stop" : "play"}
-            style={styles.actionButton}
-            onPress={() => handleTogglePlayback(item)}
-          >
-            {isPlaying ? "Stop" : "Play"}
-          </Button>
-
-          <Button
-            mode="text"
-            textColor="#b91c1c"
-            icon="delete"
-            style={styles.actionButton}
-            onPress={() => handleDeleteRecording(item)}
-          >
-            Delete
-          </Button>
-        </View>
-      </View>
+      <RecordingListItem
+        item={item}
+        isPlaying={isPlaying}
+        onTogglePlayback={handleTogglePlayback}
+        onDelete={handleDeleteRecording}
+        styles={styles}
+      />
     );
   }
 
