@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Alert, FlatList, View } from "react-native";
+import { Alert, View } from "react-native";
 import { Button, Text, TextInput } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 
 import { recordScreenStyles as styles } from "../../assets/styles/screenStyles";
-import RecordingListItem from "../components/record/RecordingListItem";
+import RecordingsList from "../components/record/RecordingsList";
 import {
   configureAudioModeForRecording,
   playSound,
@@ -279,20 +279,6 @@ export default function RecordScreen() {
   // whether the user has a recording ready to name and save
   const hasRecording = !!tempUri && !isRecording;
 
-  function renderRecordingItem({ item }) {
-    const isPlaying = playingRecordingId === item.id;
-
-    return (
-      <RecordingListItem
-        item={item}
-        isPlaying={isPlaying}
-        onTogglePlayback={handleTogglePlayback}
-        onDelete={handleDeleteRecording}
-        styles={styles}
-      />
-    );
-  }
-
   function renderHeader() {
     return (
       <>
@@ -392,15 +378,13 @@ export default function RecordScreen() {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={recordings}
-        keyExtractor={(item) => item.id}
-        renderItem={renderRecordingItem}
-        ListHeaderComponent={renderHeader}
-        ListEmptyComponent={
-          <Text style={styles.emptyRecordingsText}>No recordings yet</Text>
-        }
-        contentContainerStyle={styles.scroll}
+      <RecordingsList
+        recordings={recordings}
+        renderHeader={renderHeader}
+        playingRecordingId={playingRecordingId}
+        onTogglePlayback={handleTogglePlayback}
+        onDelete={handleDeleteRecording}
+        styles={styles}
       />
     </View>
   );

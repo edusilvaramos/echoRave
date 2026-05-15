@@ -19,10 +19,14 @@ export default function RecordingListItem({
           <Ionicons name="musical-notes-outline" size={16} color="#9a3412" />
           <Text style={styles.recordingName}>{item.name || "Untitled"}</Text>
         </View>
-        <Text style={styles.recordingDuration}>{formatDuration(item.duration)}</Text>
+        <Text style={styles.recordingDuration}>
+          {formatDuration(item.duration)}
+        </Text>
       </View>
 
-      <Text style={styles.recordingDate}>{formatCreatedAt(item.createdAt)}</Text>
+      <Text style={styles.recordingDate}>
+        {formatCreatedAt(item.createdAt)}
+      </Text>
 
       <View style={styles.recordingActions}>
         <Button
