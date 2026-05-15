@@ -16,6 +16,7 @@ export default function RecordingsList({
     <FlatList
       data={recordings}
       keyExtractor={(item) => item.id}
+      // keep each row stateless and driven by screen handlers
       renderItem={({ item }) => (
         <RecordingListItem
           item={item}
@@ -25,6 +26,7 @@ export default function RecordingsList({
           styles={styles}
         />
       )}
+      // keep the controls section inside the list scroll
       ListHeaderComponent={renderHeader}
       ListEmptyComponent={
         <Text style={styles.emptyRecordingsText}>No recordings yet</Text>

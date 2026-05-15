@@ -11,6 +11,7 @@ export default function RecordingPreview({
   onDiscard,
   styles,
 }) {
+  // keep this block hidden until a take exists
   if (!hasRecording) {
     return null;
   }
@@ -43,6 +44,7 @@ export default function RecordingPreview({
       <Button
         mode="contained"
         icon="content-save"
+        // keep same save rule from screen logic
         disabled={!clipName.trim()}
         style={styles.button}
         contentStyle={styles.buttonContent}

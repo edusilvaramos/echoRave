@@ -8,6 +8,7 @@ export default function RecordControls({
   onStopRecording,
   styles,
 }) {
+  // switch action based on current recording state
   if (isRecording) {
     return (
       <Button
@@ -24,6 +25,7 @@ export default function RecordControls({
     );
   }
 
+  // prevent starting a new take while one is waiting to be saved
   return (
     <Button
       mode="contained"

@@ -29,6 +29,7 @@ export default function RecordingListItem({
       </Text>
 
       <View style={styles.recordingActions}>
+        {/* toggle between play and stop for the same row */}
         <Button
           mode="outlined"
           icon={isPlaying ? "stop" : "play"}
@@ -38,6 +39,7 @@ export default function RecordingListItem({
           {isPlaying ? "Stop" : "Play"}
         </Button>
 
+        {/* delete action stays delegated to screen logic */}
         <Button
           mode="text"
           textColor="#b91c1c"

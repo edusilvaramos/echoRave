@@ -10,6 +10,7 @@ export default function RecordHeader({ isRecording, styles }) {
         Record a clip, preview it, then save it.
       </Text>
 
+      {/* show live status only while microphone is active */}
       {isRecording && (
         <View style={styles.recordingBadge}>
           <View style={styles.recordingDot} />
