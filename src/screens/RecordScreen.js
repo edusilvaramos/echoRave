@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Alert, View } from "react-native";
-import { Button, Text, TextInput } from "react-native-paper";
+import { Text } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 
 import { recordScreenStyles as styles } from "../../assets/styles/screenStyles";
+import RecordControls from "../components/record/RecordControls";
+import RecordHeader from "../components/record/RecordHeader";
 import RecordingsList from "../components/record/RecordingsList";
+import RecordingPreview from "../components/record/RecordingPreview";
 import {
   configureAudioModeForRecording,
   playSound,
@@ -282,94 +285,26 @@ export default function RecordScreen() {
   function renderHeader() {
     return (
       <>
-        <Text style={styles.title}>Record Audio</Text>
-        <Text style={styles.subtitle}>
-          Record a clip, preview it, then save it.
-        </Text>
+        <RecordHeader isRecording={isRecording} styles={styles} />
 
-        {/* badge shown only while the microphone is active */}
-        {isRecording && (
-          <View style={styles.recordingBadge}>
-            <View style={styles.recordingDot} />
-            <Text style={styles.recordingLabel}>Recording…</Text>
-          </View>
-        )}
+        <RecordControls
+          isRecording={isRecording}
+          hasRecording={hasRecording}
+          onStartRecording={handleStartRecording}
+          onStopRecording={handleStopRecording}
+          styles={styles}
+        />
 
-        {/* main action button toggles between start and stop */}
-        {isRecording ? (
-          <Button
-            mode="contained"
-            icon="stop"
-            buttonColor="#ef4444"
-            style={styles.button}
-            contentStyle={styles.buttonContent}
-            labelStyle={styles.buttonLabel}
-            onPress={handleStopRecording}
-          >
-            Stop Recording
-          </Button>
-        ) : (
-          <Button
-            mode="contained"
-            icon="microphone"
-            disabled={hasRecording}
-            style={styles.button}
-            contentStyle={styles.buttonContent}
-            labelStyle={styles.buttonLabel}
-            onPress={handleStartRecording}
-          >
-            Start Recording
-          </Button>
-        )}
-
-        {/* preview and save section, hidden until there is a recording */}
-        {hasRecording && (
-          <>
-            <Text style={styles.sectionTitle}>Preview & Save</Text>
-
-            <Button
-              mode="outlined"
-              icon="play"
-              disabled={isPlayingPreview}
-              style={styles.button}
-              contentStyle={styles.buttonContent}
-              labelStyle={styles.buttonLabel}
-              onPress={handlePlayPreview}
-            >
-              {isPlayingPreview ? "Playing…" : "Play Preview"}
-            </Button>
-
-            <TextInput
-              label="Clip name"
-              value={clipName}
-              onChangeText={setClipName}
-              style={styles.input}
-              mode="outlined"
-              maxLength={60}
-            />
-
-            <Button
-              mode="contained"
-              icon="content-save"
-              disabled={!clipName.trim()}
-              style={styles.button}
-              contentStyle={styles.buttonContent}
-              labelStyle={styles.buttonLabel}
-              onPress={handleSave}
-            >
-              Save Recording
-            </Button>
-
-            <Button
-              mode="text"
-              icon="restart"
-              style={styles.button}
-              onPress={handleDiscardRecording}
-            >
-              Discard and Record Again
-            </Button>
-          </>
-        )}
+        <RecordingPreview
+          hasRecording={hasRecording}
+          isPlayingPreview={isPlayingPreview}
+          clipName={clipName}
+          onChangeClipName={setClipName}
+          onPlayPreview={handlePlayPreview}
+          onSave={handleSave}
+          onDiscard={handleDiscardRecording}
+          styles={styles}
+        />
 
         <Text style={styles.sectionTitle}>Saved Recordings</Text>
       </>
