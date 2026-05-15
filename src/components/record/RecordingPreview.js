@@ -52,7 +52,12 @@ export default function RecordingPreview({
         Save Recording
       </Button>
 
-      <Button mode="text" icon="restart" style={styles.button} onPress={onDiscard}>
+      <Button
+        mode="text"
+        icon="restart"
+        style={styles.button}
+        onPress={onDiscard}
+      >
         Discard and Record Again
       </Button>
     </>

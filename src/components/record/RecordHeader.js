@@ -6,7 +6,9 @@ export default function RecordHeader({ isRecording, styles }) {
   return (
     <>
       <Text style={styles.title}>Record Audio</Text>
-      <Text style={styles.subtitle}>Record a clip, preview it, then save it.</Text>
+      <Text style={styles.subtitle}>
+        Record a clip, preview it, then save it.
+      </Text>
 
       {isRecording && (
         <View style={styles.recordingBadge}>
