@@ -1,42 +1,53 @@
 
-// Design tokens for consistent colors across screens, controls, and audio states.
 const colors = {
-  // Backgrounds
-  background: '#0B1120',
-  surface: '#111827',
-  card: '#1F2937',
+  background: "#0B1120",
+  surface: "#111827",
+  card: "#1F2937",
+  primary: "#7C3AED",
+  secondary: "#22D3EE",
+  accent: "#10B981",
+  textPrimary: "#F9FAFB",
+  textSecondary: "#9CA3AF",
+  textMuted: "#6B7280",
+  record: "#EF4444",
+  stop: "#F87171",
+  play: "#10B981",
+  pause: "#FBBF24",
+  delete: "#DC2626",
+  success: "#10B981",
+  warning: "#FBBF24",
+  error: "#F87171",
+  info: "#22D3EE",
+  border: "#374151",
+  inputBackground: "#111827",
+  placeholder: "#6B7280",
+  waveform: "#22D3EE",
+  waveformInactive: "#374151",
+};
 
-  // Main colors
-  primary: '#7C3AED',
-  secondary: '#22D3EE',
-  accent: '#10B981',
-
-  // Text
-  textPrimary: '#F9FAFB',
-  textSecondary: '#9CA3AF',
-  textMuted: '#6B7280',
-
-  // Buttons / actions
-  record: '#EF4444',
-  stop: '#F87171',
-  play: '#10B981',
-  pause: '#FBBF24',
-  delete: '#DC2626',
-
-  // Status
-  success: '#10B981',
-  warning: '#FBBF24',
-  error: '#F87171',
-  info: '#22D3EE',
-
-  // Borders / inputs
-  border: '#374151',
-  inputBackground: '#111827',
-  placeholder: '#6B7280',
-
-  // Audio / wave style
-  waveform: '#22D3EE',
-  waveformInactive: '#374151',
+export const screenColors = {
+  white: "#ffffff",
+  homeBackground: "#f6f7fb",
+  homeTitle: "#0f172a",
+  homeTextStrong: "#334155",
+  homeText: "#475569",
+  homeTextMuted: "#64748b",
+  borderSoft: "#e2e8f0",
+  success: "#15803d",
+  error: "#b91c1c",
+  info: "#0e7490",
+  recordBackground: "#fff7ed",
+  recordTitle: "#7c2d12",
+  recordText: "#9a3412",
+  recordHint: "#b45309",
+  recordBorder: "#fdba74",
+  recordingBadgeBackground: "#fee2e2",
+  recordingDot: "#ef4444",
+  recordingBadgeText: "#991b1b",
+  raveBackground: "#ecfeff",
+  raveTitle: "#155e75",
+  raveSubtitle: "#0e7490",
+  raveHint: "#0891b2",
 };
 
 export default colors;
