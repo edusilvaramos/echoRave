@@ -9,6 +9,6 @@ export const sharedStyleValues = {
     fontWeight: "700",
   },
   inputBackground: {
-    backgroundColor: screenColors.white,
+    backgroundColor: screenColors.common.surface,
   },
 };

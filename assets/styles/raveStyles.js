@@ -8,21 +8,21 @@ export const raveScreenStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 24,
-    backgroundColor: screenColors.raveBackground,
+    backgroundColor: screenColors.cool.background,
     gap: 8,
   },
   title: {
     fontSize: 28,
     fontWeight: "700",
-    color: screenColors.raveTitle,
+    color: screenColors.cool.strong,
   },
   subtitle: {
     fontSize: 16,
-    color: screenColors.raveSubtitle,
+    color: screenColors.cool.text,
   },
   hint: {
     fontSize: 14,
-    color: screenColors.raveHint,
+    color: screenColors.cool.muted,
     textAlign: "center",
   },
 });
