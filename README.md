@@ -17,6 +17,14 @@ Mobile app built with React Native and Expo to connect to a Flask/RAVE server, r
 
 The app asks for microphone permission when the user starts recording.
 
+## Server
+
+This project uses the Python Flask server.
+
+Server repository:
+
+https://github.com/gnvIRCAM/RAVE-ONNX-Server
+
 ## Server API
 
 Flask endpoints used by the app:
@@ -32,6 +40,14 @@ Flask endpoints used by the app:
 ```bash
 npm install
 npx expo start
+```
+
+To open the app on a physical phone with Expo Go, keep the computer and phone on the same Wi-Fi network and scan the QR code shown by Expo.
+
+If the Expo CLI has trouble connecting over the local network, use tunnel mode instead:
+
+```bash
+npx expo start --tunnel
 ```
 
 The Flask server must be running and reachable on the same network. Enter the server IP and port on the Home screen and tap **Test connection**.
