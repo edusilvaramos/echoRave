@@ -16,6 +16,7 @@ export default function RecordScreen() {
   const dispatch = useDispatch();
   const recordings = useSelector((state) => state.recordings.items || []);
 
+  // playback controller handles both preview audio and saved recordings
   const {
     soundRef,
     isPlayingPreview,
@@ -25,6 +26,7 @@ export default function RecordScreen() {
     handleTogglePlayback,
   } = usePlaybackController({ tempUri: null });
 
+  // recording controller owns temp clip state and save/discard actions
   const {
     isRecording,
     tempUri,
@@ -53,6 +55,7 @@ export default function RecordScreen() {
           text: "Delete",
           style: "destructive",
           onPress: async () => {
+            // stop playback first to avoid audio state errors on deleted files
             if (playingRecordingId === recording.id) {
               await handleTogglePlayback(recording);
             }
@@ -67,6 +70,7 @@ export default function RecordScreen() {
   }
 
   async function handlePlayPreviewWithCurrentTemp() {
+    // preview only exists after a successful stop recording action
     if (!tempUri) {
       return;
     }
