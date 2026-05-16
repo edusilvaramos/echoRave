@@ -1,12 +1,6 @@
-import React, { useMemo, useState } from "react";
-import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  View,
-} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useMemo, useState } from "react";
+import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import {
   Button,
   Card,
@@ -15,12 +9,9 @@ import {
   Text,
   TextInput,
 } from "react-native-paper";
+import { useDispatch, useSelector } from "react-redux";
 
-import {
-  buildBaseUrl,
-  getModels,
-  testConnection,
-} from "../services/api";
+import { buildBaseUrl, getModels, testConnection } from "../services/api";
 import {
   setConnectionError,
   setConnectionSuccess,
@@ -33,7 +24,7 @@ import { homeScreenStyles as styles } from "../../assets/styles/screenStyles";
 export default function HomeScreen() {
   const dispatch = useDispatch();
   const { ip, port, baseUrl, models, connectionStatus, error } = useSelector(
-    (state) => state.server
+    (state) => state.server,
   );
 
   const [ipInput, setIpInput] = useState(ip);
@@ -66,6 +57,19 @@ export default function HomeScreen() {
       return;
     }
 
+    // localhost on mobile points to the device itself, not the server on the computer
+    const isLocalhostIp =
+      cleanIp === "127.0.0.1" || cleanIp.toLowerCase() === "localhost";
+
+    if (isLocalhostIp) {
+      const message =
+        "Use your computer LAN IP (example: 192.168.1.151), not 127.0.0.1.";
+      dispatch(setConnectionError(message));
+      dispatch(setModels([]));
+      setFeedback(message);
+      return;
+    }
+
     setIsLoading(true);
     setFeedback("");
 
@@ -84,7 +88,7 @@ export default function HomeScreen() {
     }
 
     dispatch(setConnectionSuccess());
-    setFeedback(connectionResult.message || "Connection successful.");
+    setFeedback("");
 
     // after a successful ping, load available models from the backend
     const availableModels = await getModels(url);
@@ -111,7 +115,7 @@ export default function HomeScreen() {
           onChangeText={setIpInput}
           dense
           label="IP"
-          placeholder="127.0.0.1"
+          placeholder="192.168.x.x"
           autoCapitalize="none"
           keyboardType="numbers-and-punctuation"
           style={styles.input}
@@ -143,33 +147,37 @@ export default function HomeScreen() {
           Test connection
         </Button>
 
-        {!!feedback && <HelperText type="info">{feedback}</HelperText>}
+        {!!feedback && <HelperText type="error">{feedback}</HelperText>}
         {!feedback && !!error && <HelperText type="error">{error}</HelperText>}
 
         <Card style={styles.statusCard}>
           <Card.Content>
-          <Text style={styles.statusTitle}>Status</Text>
-          <Text style={[styles.statusValue, statusColorStyle]}>{statusLabel}</Text>
-          {!!baseUrl && <Text style={styles.baseUrl}>Base URL: {baseUrl}</Text>}
+            <Text style={styles.statusTitle}>Status</Text>
+            <Text style={[styles.statusValue, statusColorStyle]}>
+              {statusLabel}
+            </Text>
+            {!!baseUrl && (
+              <Text style={styles.baseUrl}>Base URL: {baseUrl}</Text>
+            )}
           </Card.Content>
         </Card>
 
         <Card style={styles.modelsCard}>
           <Card.Content>
-          <Text style={styles.modelsTitle}>Available models</Text>
-          {models.length === 0 ? (
-            <Text style={styles.modelsEmpty}>No models loaded yet.</Text>
-          ) : (
-            models.map((modelName) => (
-              <Chip
-                key={modelName}
-                style={styles.modelItem}
-                icon="music-note"
-              >
-                {modelName}
-              </Chip>
-            ))
-          )}
+            <Text style={styles.modelsTitle}>Available models</Text>
+            {models.length === 0 ? (
+              <Text style={styles.modelsEmpty}>No models loaded yet.</Text>
+            ) : (
+              models.map((modelName) => (
+                <Chip
+                  key={modelName}
+                  style={styles.modelItem}
+                  icon="music-note"
+                >
+                  {modelName}
+                </Chip>
+              ))
+            )}
           </Card.Content>
         </Card>
       </ScrollView>
