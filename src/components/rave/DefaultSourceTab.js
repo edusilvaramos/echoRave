@@ -1,24 +1,38 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useAssets } from "expo-asset";
 import { View } from "react-native";
 import { Button, Card, Text } from "react-native-paper";
 import { useDispatch } from "react-redux";
 
-import { setSelectedAudio, setSelectedSourceType } from "../../store/raveSlice";
+import {
+  setRaveError,
+  setSelectedAudio,
+  setSelectedSourceType,
+  setTransformedAudioUri,
+} from "../../store/raveSlice";
 
 import { raveScreenStyles as styles } from "../../../assets/styles/screenStyles";
-
-export const DEFAULT_AUDIO = {
-  name: "Default sample",
-  uri: null,
-  type: "default",
-};
 
 export default function DefaultSourceTab() {
   const dispatch = useDispatch();
 
+  // useAssets resolves the bundled file to a local file:// URI that expo-av and fetch can read
+  const [assets] = useAssets([require("../../../assets/sounds/sample.wav")]);
+  const sampleUri = assets?.[0]?.localUri ?? null;
+
   function handleSelectDefaultAudio() {
-    dispatch(setSelectedAudio(DEFAULT_AUDIO));
-    dispatch(setSelectedSourceType(DEFAULT_AUDIO.type));
+    if (!sampleUri) return;
+
+    dispatch(
+      setSelectedAudio({
+        name: "Default sample",
+        uri: sampleUri,
+        type: "default",
+      }),
+    );
+    dispatch(setSelectedSourceType("default"));
+    dispatch(setTransformedAudioUri(""));
+    dispatch(setRaveError(""));
   }
 
   return (
@@ -30,18 +44,23 @@ export default function DefaultSourceTab() {
             <Text style={styles.cardTitle}>Default audio</Text>
           </View>
           <Text style={styles.cardDescription}>
-            Selection is ready, but no bundled sample exists yet.
+            A bundled 440 Hz sample ready to send to the server.
           </Text>
-          {/* uri should point to a real file inside assets/sounds when it exists */}
+
           <Button
             mode="contained"
             style={styles.button}
             contentStyle={styles.buttonContent}
             icon="music-note"
             onPress={handleSelectDefaultAudio}
+            disabled={!sampleUri}
           >
             Use default sample
           </Button>
+
+          {!sampleUri && (
+            <Text style={styles.hint}>Preparing audio file...</Text>
+          )}
         </Card.Content>
       </Card>
     </View>
