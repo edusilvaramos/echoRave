@@ -1,5 +1,7 @@
 // how long to wait before giving up on a request
 const DEFAULT_TIMEOUT_MS = 8000;
+// uploads can be slow on local networks with large files
+const UPLOAD_TIMEOUT_MS = 60000;
 
 // in this file i make all the communication with the RAVE server using fetch.
 
@@ -22,21 +24,6 @@ function buildErrorMessage(error, fallback = "Request failed") {
   }
 
   return fallback;
-}
-
-// map connection errors to simple categories for on-screen diagnostics
-function classifyConnectionError(error) {
-  if (error?.name === "AbortError") {
-    return "timeout";
-  }
-
-  const message = String(error?.message || "").toLowerCase();
-
-  if (message.includes("network request failed")) {
-    return "network";
-  }
-
-  return "unknown";
 }
 
 // detect when the endpoint returned a web page instead of the expected API text/json
@@ -231,7 +218,6 @@ export async function testConnection(baseUrl) {
     return {
       ok: false,
       message: buildErrorMessage(error, "Connection failed"),
-      errorType: classifyConnectionError(error),
       testedUrl,
     };
   }
@@ -350,10 +336,11 @@ export async function uploadAudio(baseUrl, audioUri) {
   });
 
   try {
-    const response = await requestWithTimeout(`${cleanBaseUrl}/upload`, {
-      method: "POST",
-      body: formData,
-    });
+    const response = await requestWithTimeout(
+      `${cleanBaseUrl}/upload`,
+      { method: "POST", body: formData },
+      UPLOAD_TIMEOUT_MS,
+    );
     const text = await safeReadText(response);
     const message = text || `Server replied with status ${response.status}`;
 

@@ -68,12 +68,6 @@ export const recordScreenStyles = StyleSheet.create({
     color: screenColors.warm.strong,
     marginTop: 16,
   },
-  hint: {
-    fontSize: 14,
-    color: screenColors.warm.muted,
-    textAlign: "center",
-    marginTop: 8,
-  },
   emptyRecordingsText: {
     marginTop: 8,
     color: screenColors.warm.text,

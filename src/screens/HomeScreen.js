@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, View } from "react-native";
 import {
   Button,
@@ -32,19 +32,19 @@ export default function HomeScreen() {
   const [isLoading, setIsLoading] = useState(false);
   const [feedback, setFeedback] = useState("");
 
-  const statusLabel = useMemo(() => {
+  function getStatusLabel() {
     if (isLoading) return "Connecting";
     if (connectionStatus === "connected") return "Connected";
     if (connectionStatus === "error") return "Error";
     return "Not connected";
-  }, [connectionStatus, isLoading]);
+  }
 
-  const statusColorStyle = useMemo(() => {
+  function getStatusColorStyle() {
     if (isLoading) return styles.infoText;
     if (connectionStatus === "connected") return styles.successText;
     if (connectionStatus === "error") return styles.errorText;
     return styles.mutedText;
-  }, [connectionStatus, isLoading]);
+  }
 
   async function handleTestConnection() {
     const cleanIp = ipInput.trim();
@@ -153,8 +153,8 @@ export default function HomeScreen() {
         <Card style={styles.statusCard}>
           <Card.Content>
             <Text style={styles.statusTitle}>Status</Text>
-            <Text style={[styles.statusValue, statusColorStyle]}>
-              {statusLabel}
+            <Text style={[styles.statusValue, getStatusColorStyle()]}>
+              {getStatusLabel()}
             </Text>
             {!!baseUrl && (
               <Text style={styles.baseUrl}>Base URL: {baseUrl}</Text>

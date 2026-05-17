@@ -61,10 +61,6 @@ export const homeScreenStyles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "700",
   },
-  statusMessage: {
-    fontSize: 14,
-    color: screenColors.common.text,
-  },
   baseUrl: {
     marginTop: 4,
     fontSize: 12,
@@ -91,10 +87,6 @@ export const homeScreenStyles = StyleSheet.create({
   modelItem: {
     paddingVertical: 0,
     margin: 4,
-  },
-  modelText: {
-    fontSize: 14,
-    color: screenColors.home.title,
   },
   successText: {
     color: screenColors.status.success,
