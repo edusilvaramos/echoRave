@@ -3,6 +3,7 @@ import { Alert } from "react-native";
 import { useDispatch } from "react-redux";
 
 import {
+  configureAudioModeForPlayback,
   configureAudioModeForRecording,
   requestAudioPermissions,
   startRecording,
@@ -66,6 +67,9 @@ export default function useRecordingController({
 
     const result = await stopRecording(recordingRef.current);
     recordingRef.current = null;
+
+    // switch back to playback mode immediately so preview plays through the speaker
+    await configureAudioModeForPlayback();
 
     if (!result.uri) {
       Alert.alert("Error", "Recording failed. No audio was captured.");

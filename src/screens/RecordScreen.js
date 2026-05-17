@@ -1,12 +1,12 @@
-import { Alert, View } from "react-native";
+import { Alert, ScrollView, View } from "react-native";
 import { Text } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 
 import { recordScreenStyles as styles } from "../../assets/styles/screenStyles";
 import RecordControls from "../components/record/RecordControls";
 import RecordHeader from "../components/record/RecordHeader";
+import RecordingListItem from "../components/record/RecordingListItem";
 import RecordingPreview from "../components/record/RecordingPreview";
-import RecordingsList from "../components/record/RecordingsList";
 import usePlaybackController from "../hooks/usePlaybackController";
 import useRecordingController from "../hooks/useRecordingController";
 import { deleteFileIfExists } from "../services/fileService";
@@ -16,7 +16,6 @@ export default function RecordScreen() {
   const dispatch = useDispatch();
   const recordings = useSelector((state) => state.recordings.items || []);
 
-  // playback controller handles both preview audio and saved recordings
   const {
     soundRef,
     isPlayingPreview,
@@ -26,7 +25,6 @@ export default function RecordScreen() {
     handleTogglePlayback,
   } = usePlaybackController({ tempUri: null });
 
-  // recording controller owns temp clip state and save/discard actions
   const {
     isRecording,
     tempUri,
@@ -47,20 +45,14 @@ export default function RecordScreen() {
       "Delete recording",
       `Do you want to delete "${recording.name}"?`,
       [
-        {
-          text: "Cancel",
-          style: "cancel",
-        },
+        { text: "Cancel", style: "cancel" },
         {
           text: "Delete",
           style: "destructive",
           onPress: async () => {
-            // stop playback first to avoid audio state errors on deleted files
             if (playingRecordingId === recording.id) {
               await handleTogglePlayback(recording);
             }
-
-            // deleting the file is best-effort, then we remove from Redux anyway
             await deleteFileIfExists(recording.uri);
             dispatch(removeRecording(recording.id));
           },
@@ -70,17 +62,17 @@ export default function RecordScreen() {
   }
 
   async function handlePlayPreviewWithCurrentTemp() {
-    // preview only exists after a successful stop recording action
-    if (!tempUri) {
-      return;
-    }
-
+    if (!tempUri) return;
     await handlePlayPreview(tempUri);
   }
 
-  function renderHeader() {
-    return (
-      <>
+  return (
+    <View style={styles.container}>
+      {/* keyboardShouldPersistTaps keeps the TextInput focused while typing the clip name */}
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        contentContainerStyle={styles.scroll}
+      >
         <RecordHeader isRecording={isRecording} styles={styles} />
 
         <RecordControls
@@ -103,20 +95,22 @@ export default function RecordScreen() {
         />
 
         <Text style={styles.sectionTitle}>Saved Recordings</Text>
-      </>
-    );
-  }
 
-  return (
-    <View style={styles.container}>
-      <RecordingsList
-        recordings={recordings}
-        renderHeader={renderHeader}
-        playingRecordingId={playingRecordingId}
-        onTogglePlayback={handleTogglePlayback}
-        onDelete={handleDeleteRecording}
-        styles={styles}
-      />
+        {recordings.length === 0 ? (
+          <Text style={styles.emptyRecordingsText}>No recordings yet</Text>
+        ) : (
+          recordings.map((item) => (
+            <RecordingListItem
+              key={item.id}
+              item={item}
+              isPlaying={playingRecordingId === item.id}
+              onTogglePlayback={handleTogglePlayback}
+              onDelete={handleDeleteRecording}
+              styles={styles}
+            />
+          ))
+        )}
+      </ScrollView>
     </View>
   );
 }
