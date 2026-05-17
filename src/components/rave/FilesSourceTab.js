@@ -3,7 +3,12 @@ import { View } from "react-native";
 import { Button, Text } from "react-native-paper";
 import { useDispatch } from "react-redux";
 
-import { setSelectedAudio, setSelectedSourceType } from "../../store/raveSlice";
+import {
+  setRaveError,
+  setSelectedAudio,
+  setSelectedSourceType,
+  setTransformedAudioUri,
+} from "../../store/raveSlice";
 
 import { raveScreenStyles as styles } from "../../../assets/styles/screenStyles";
 
@@ -11,25 +16,31 @@ export default function FilesSourceTab() {
   const dispatch = useDispatch();
 
   async function handlePickAudioFile() {
-    const result = await DocumentPicker.getDocumentAsync({
-      type: "audio/*",
-      multiple: false,
-      copyToCacheDirectory: true,
-    });
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "audio/*",
+        multiple: false,
+        copyToCacheDirectory: true,
+      });
 
-    if (result.canceled || !result.assets?.length) {
-      return;
+      if (result.canceled || !result.assets?.length) {
+        return;
+      }
+
+      const pickedFile = result.assets[0];
+      dispatch(
+        setSelectedAudio({
+          name: pickedFile.name || "Selected file",
+          uri: pickedFile.uri,
+          type: "file",
+        }),
+      );
+      dispatch(setSelectedSourceType("file"));
+      dispatch(setTransformedAudioUri(""));
+      dispatch(setRaveError(""));
+    } catch (error_) {
+      dispatch(setRaveError(error_?.message || "Could not open file picker."));
     }
-
-    const pickedFile = result.assets[0];
-    dispatch(
-      setSelectedAudio({
-        name: pickedFile.name || "Selected file",
-        uri: pickedFile.uri,
-        type: "file",
-      }),
-    );
-    dispatch(setSelectedSourceType("file"));
   }
 
   return (

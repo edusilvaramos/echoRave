@@ -1,9 +1,14 @@
 import { Ionicons } from "@expo/vector-icons";
-import { FlatList, TouchableOpacity, View } from "react-native";
+import { ScrollView, TouchableOpacity, View } from "react-native";
 import { Text } from "react-native-paper";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setSelectedAudio, setSelectedSourceType } from "../../store/raveSlice";
+import {
+  setRaveError,
+  setSelectedAudio,
+  setSelectedSourceType,
+  setTransformedAudioUri,
+} from "../../store/raveSlice";
 
 import { raveScreenStyles as styles } from "../../../assets/styles/screenStyles";
 
@@ -20,6 +25,8 @@ export default function RecordingsSourceTab() {
       }),
     );
     dispatch(setSelectedSourceType("recording"));
+    dispatch(setTransformedAudioUri(""));
+    dispatch(setRaveError(""));
   }
 
   if (!recordings.length) {
@@ -32,13 +39,12 @@ export default function RecordingsSourceTab() {
 
   return (
     <View style={styles.tabContent}>
-      <FlatList
-        data={recordings}
-        keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => (
+      <ScrollView contentContainerStyle={[styles.recordingsList, { gap: 8 }]}>
+        {recordings.map((item) => (
           <TouchableOpacity
+            key={String(item.id)}
             style={styles.recordingItem}
-            activeOpacity={0.8}
+            activeOpacity={0.7}
             onPress={() => handleSelectRecording(item)}
           >
             <View style={styles.rowWithIcon}>
@@ -46,9 +52,8 @@ export default function RecordingsSourceTab() {
               <Text style={styles.recordingName}>{item.name}</Text>
             </View>
           </TouchableOpacity>
-        )}
-        contentContainerStyle={styles.recordingsList}
-      />
+        ))}
+      </ScrollView>
     </View>
   );
 }
