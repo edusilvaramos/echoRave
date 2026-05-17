@@ -5,57 +5,41 @@ import { screenColors } from "./colors";
 export const raveScreenStyles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: screenColors.cool.background,
+  },
+  content: {
     paddingHorizontal: 20,
     paddingTop: 24,
-    paddingBottom: 16,
-    backgroundColor: screenColors.cool.background,
+    paddingBottom: 28,
     gap: 12,
   },
   title: {
-    marginTop: 50,
+    marginTop: 48,
     fontSize: 26,
     fontWeight: "700",
     color: screenColors.cool.strong,
   },
-  statusCard: {
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: screenColors.common.borderSoft,
-    backgroundColor: screenColors.common.surface,
-  },
-  statusTitle: {
-    fontSize: 14,
-    fontWeight: "700",
-    color: screenColors.common.textStrong,
-  },
-  modelsText: {
-    marginTop: 6,
-    fontSize: 13,
-    color: screenColors.common.textMuted,
-  },
   tabsContainer: {
-    flex: 1,
-    minHeight: 320,
+    height: 300,
+    borderRadius: 12,
+    overflow: "hidden",
   },
   tabBar: {
-    backgroundColor: screenColors.common.surface,
-    borderRadius: 10,
-    overflow: "hidden",
-    marginBottom: 10,
+    backgroundColor: screenColors.cool.strong,
   },
   tabIndicator: {
-    backgroundColor: screenColors.cool.strong,
+    backgroundColor: "#ffffff",
     height: 3,
   },
   tabLabel: {
     fontSize: 13,
     fontWeight: "600",
-    color: screenColors.common.textMuted,
+    color: "rgba(255,255,255,0.65)",
   },
   tabLabelActive: {
     fontSize: 13,
     fontWeight: "700",
-    color: screenColors.cool.strong,
+    color: "#ffffff",
   },
   tabContent: {
     flex: 1,
@@ -91,7 +75,6 @@ export const raveScreenStyles = StyleSheet.create({
   },
   recordingsList: {
     paddingBottom: 12,
-    gap: 8,
   },
   recordingItem: {
     borderRadius: 10,
@@ -115,6 +98,66 @@ export const raveScreenStyles = StyleSheet.create({
     marginBottom: 2,
     alignSelf: "flex-start",
     backgroundColor: screenColors.common.surface,
+  },
+  modelsWrap: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginTop: 10,
+  },
+  modelChip: {
+    marginBottom: 6,
+  },
+  actionsRow: {
+    flexDirection: "row",
+    gap: 8,
+    marginTop: 12,
+  },
+  secondaryButton: {
+    flex: 1,
+  },
+  processingRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    marginTop: 10,
+  },
+  checklistRow: {
+    marginTop: 10,
+    gap: 6,
+  },
+  checklistItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  checklistText: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: screenColors.common.text,
+  },
+  stepRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginTop: 10,
+  },
+  stepText: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: screenColors.common.text,
+  },
+  errorText: {
+    marginTop: 10,
+    color: screenColors.status.error,
+    fontSize: 13,
+    fontWeight: "600",
+  },
+  successText: {
+    marginTop: 10,
+    color: screenColors.status.success,
+    fontSize: 13,
+    fontWeight: "600",
   },
   noSelectionText: {
     marginTop: 10,

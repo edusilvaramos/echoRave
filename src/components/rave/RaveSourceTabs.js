@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useWindowDimensions } from "react-native";
-import { Text } from "react-native-paper";
+import { Text, useWindowDimensions } from "react-native";
+import { useSelector } from "react-redux";
 import { TabBar, TabView } from "react-native-tab-view";
 
 import { raveScreenStyles as styles } from "../../../assets/styles/screenStyles";
@@ -10,7 +10,11 @@ import RecordingsSourceTab from "./RecordingsSourceTab";
 
 export default function RaveSourceTabs() {
   const layout = useWindowDimensions();
-  const [tabIndex, setTabIndex] = useState(0);
+  const hasRecordings = useSelector(
+    (state) => (state.recordings.items || []).length > 0,
+  );
+  // start on Recordings tab when the user already has saved clips
+  const [tabIndex, setTabIndex] = useState(hasRecordings ? 1 : 0);
   const [routes] = useState([
     { key: "default", title: "Default" },
     { key: "recordings", title: "Recordings" },
